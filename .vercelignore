@@ -3,5 +3,7 @@
 .agents
 scripts
 drizzle
+node_modules
+.next
 *.log
 *.tsbuildinfo
