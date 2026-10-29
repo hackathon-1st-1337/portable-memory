@@ -11,10 +11,27 @@ const links = [
 export function NavLinks() {
   const pathname = usePathname();
 
+  let links = [
+    { href: "/dashboard", label: "Dashboard" },
+    { href: "/pods", label: "Pods" },
+  ];
+
+  if (pathname.startsWith("/p/")) {
+    const slug = pathname.split("/")[2];
+    links = [
+      { href: `/p/${slug}/memory`, label: "Memory" },
+      { href: `/p/${slug}/graph`, label: "Graph" },
+      { href: `/p/${slug}/dream`, label: "Dreaming" },
+      { href: `/p/${slug}/agents`, label: "Agents" },
+      { href: `/p/${slug}/audit`, label: "Audit Log" },
+      { href: "/pods", label: "Pods" },
+    ];
+  }
+
   return (
     <nav aria-label="Main" className="flex items-center gap-1">
       {links.map(({ href, label }) => {
-        const active = pathname === href || pathname.startsWith(`${href}/`);
+        const active = pathname === href || (href !== "/pods" && pathname.startsWith(`${href}/`));
         return (
           <Link
             key={href}

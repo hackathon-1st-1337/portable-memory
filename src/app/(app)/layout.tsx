@@ -2,20 +2,24 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { Logo } from "@/components/logo";
 import { NavLinks } from "./nav-links";
+import { PodSwitcher } from "./pod-switcher";
 import { UserMenu, UserMenuSkeleton } from "./user-menu";
 
 export default function AppLayout({ children }: LayoutProps<"/">) {
   return (
     <div className="flex flex-1 flex-col">
       <header className="border-b border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
-        <div className="mx-auto flex h-14 w-full max-w-5xl items-center gap-6 px-4">
+        <div className="mx-auto flex h-14 w-full max-w-5xl items-center gap-4 px-4 sm:gap-6">
           <Link
             href="/dashboard"
             className="rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-900 dark:focus-visible:ring-zinc-100"
           >
             <Logo />
           </Link>
-          <NavLinks />
+          <PodSwitcher />
+          <Suspense fallback={<div className="h-6 w-36 rounded bg-zinc-100 motion-safe:animate-pulse dark:bg-zinc-800" />}>
+            <NavLinks />
+          </Suspense>
           <div className="ml-auto min-w-0">
             {/* The session read streams in here so the rest of the shell renders instantly. */}
             <Suspense fallback={<UserMenuSkeleton />}>

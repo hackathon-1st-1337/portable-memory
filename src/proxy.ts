@@ -5,6 +5,11 @@ import { auth } from "@/lib/auth/server";
 export default auth.middleware({ loginUrl: "/auth/sign-in" });
 
 export const config = {
-  // Keep /auth/*, /api/auth/*, and static assets reachable without a session.
-  matcher: ["/dashboard/:path*", "/account/:path*"],
+  matcher: [
+    "/dashboard/:path*",
+    "/account/:path*",
+    "/pods",
+    "/pods/:path*",
+    "/p/:path*",
+  ],
 };

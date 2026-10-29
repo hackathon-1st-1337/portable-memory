@@ -1,6 +1,7 @@
 allowBuilds:
   # postinstall only prints a funding banner
   core-js: false
+  esbuild: set this to true or false
   # postinstall ensures the native resolver binary for this platform is present (used by ESLint)
   unrs-resolver: true
 minimumReleaseAgeExclude:
