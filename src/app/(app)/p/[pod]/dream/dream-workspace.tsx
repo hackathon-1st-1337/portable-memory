@@ -82,7 +82,7 @@ export function DreamWorkspace({ pod, runs, suggestions }: Props) {
             <div className="flex items-center gap-2">
               <span className="flex h-2 w-2 rounded-full bg-indigo-500 animate-pulse" />
               <span className="text-xs font-semibold uppercase tracking-wider text-indigo-700 dark:text-indigo-300">
-                Cloudflare Workers AI Consolidation
+                Nebius Token Factory (Nemotron 3 Ultra & Nano)
               </span>
             </div>
             <h1 className="mt-1 text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">

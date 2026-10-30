@@ -95,7 +95,7 @@ async function main() {
     podId: pod.id,
     namespaceId: protectedNs.id,
     key: "deploy_checklist",
-    value: "1. Run verify script\n2. Check Cloudflare tunnel\n3. Push to prod",
+    value: "1. Run verify script\n2. Run Nebius verification\n3. Push to prod",
     kind: "procedure",
     procedureWhen: "When deploying to production",
     pinned: true,
@@ -151,20 +151,20 @@ async function main() {
     podId: pod.id,
     namespaceId: standardNs.id,
     key: "architecture_notes",
-    value: "Portable Memory uses Neon Postgres and Cloudflare Workers AI for vector embeddings and LLM inference.",
+    value: "Portable Memory uses Neon Postgres and Nebius Token Factory with Nemotron models and Qwen embeddings.",
     kind: "fact",
     createdByUser: true,
   });
 
   const nextEntity = await createOrGetEntity(pod.id, "tool", "Next.js", ["Next", "NextJS"]);
   const postgresEntity = await createOrGetEntity(pod.id, "tool", "Neon Postgres", ["Neon", "Postgres"]);
-  const cfEntity = await createOrGetEntity(pod.id, "tool", "Cloudflare Workers AI", ["Cloudflare"]);
+  const nebiusEntity = await createOrGetEntity(pod.id, "tool", "Nebius Token Factory", ["Nebius", "Nemotron"]);
 
-  console.log(`   ✓ Entities created: ${nextEntity.name}, ${postgresEntity.name}, ${cfEntity.name}`);
+  console.log(`   ✓ Entities created: ${nextEntity.name}, ${postgresEntity.name}, ${nebiusEntity.name}`);
 
   await createRelation(pod.id, nextEntity.id, "integrates_with", postgresEntity.id, sourceEntry.id, 0.95);
-  await createRelation(pod.id, nextEntity.id, "uses_model_from", cfEntity.id, sourceEntry.id, 0.90);
-  console.log("   ✓ Relations established linking Next.js -> Neon Postgres and Cloudflare Workers AI");
+  await createRelation(pod.id, nextEntity.id, "uses_model_from", nebiusEntity.id, sourceEntry.id, 0.90);
+  console.log("   ✓ Relations established linking Next.js -> Neon Postgres and Nebius Token Factory");
 
   // Explore graph as user (full access)
   const fullGraph = await exploreMemory(pod.id, "Next.js", 1);
@@ -190,9 +190,9 @@ async function main() {
   console.log("   ✓ Scope Isolation Verified: Relations from ungranted folder are completely invisible to restricted agent");
 
   // -------------------------------------------------------------------------
-  // 4. Dreaming Background Consolidation (Cloudflare Workers AI)
+  // 4. Dreaming Background Consolidation (Nebius Token Factory Nemotron 3 Ultra)
   // -------------------------------------------------------------------------
-  console.log("\n4. Testing Dreaming Consolidation via Cloudflare Workers AI...");
+  console.log("\n4. Testing Dreaming Consolidation via Nebius Token Factory (Nemotron 3 Ultra)...");
 
   // Add a pair of complementary entries for synthesis
   await createEntry({

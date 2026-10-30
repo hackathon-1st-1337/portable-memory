@@ -347,9 +347,9 @@ Dashboard (human, Neon Auth session)     REST /api/v1/memory…      MCP /api/mc
 - Dashboard review queue on `/p/[pod]/memory` enables 1-click Approve and Reject.
 - `renderAgentContext` renders active live procedures under `## Active Procedures` with trigger conditions.
 
-**Dreaming** (background consolidation with Cloudflare Workers AI) — **IMPLEMENTED**
+**Dreaming** (background consolidation with Nebius Token Factory) — **IMPLEMENTED**
 - Tables `dream_runs` and `dream_suggestions` created and migrated.
-- Cloudflare Workers AI integration with `@cf/meta/llama-3.1-8b-instruct-fp8` for LLM analysis and `@cf/baai/bge-m3` for vector embeddings.
+- Nebius Token Factory integration: **Nemotron 3 Ultra 550B** (`nvidia/Nemotron-3-Ultra-550b-a55b`) for serious reasoning, deep synthesis, and contradiction resolution; **Nemotron 3 Nano** (`nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B`) for fast, everyday operational calls and procedure classification; **Qwen 3 Embedding 8B** (`Qwen/Qwen3-Embedding-8B`) for 1536-dim vector embeddings.
 - Synthesizes merges, contradictions, stale entries, procedure promotion, and knowledge graph relations.
 - Dashboard on `/p/[pod]/dream` allows manual triggering, stat monitoring, and reviewing/accepting/dismissing suggestions.
 
@@ -368,8 +368,8 @@ Dashboard (human, Neon Auth session)     REST /api/v1/memory…      MCP /api/mc
 - Table `s3_objects` created and migrated.
 - S3 upload and text extraction with automated memory entry linkage (`src/lib/storage/s3.ts`).
 
-**End-to-End Verification** — **PASSING 100% (`scripts/verify-v2.ts`)**
-- Live Neon Postgres & Cloudflare Workers AI verification passing with 0 errors.
+**End-to-End Verification** — **PASSING 100% (`scripts/verify-v2.ts` & `scripts/verify-nebius.ts`)**
+- Live Neon Postgres & Nebius Token Factory verification passing with 0 errors.
 - Full Next.js production build (`pnpm build`) passing with 0 errors across all 29 routes.
 
 ---

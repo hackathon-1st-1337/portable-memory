@@ -3,7 +3,7 @@ import { createHash } from "crypto";
 import { sql, eq, and, isNull } from "drizzle-orm";
 import { db } from "@/db/client";
 import { memoryEntries, type MemoryEntry } from "@/db/schema";
-import { runCloudflareEmbedding } from "@/lib/ai/cloudflare";
+import { runNebiusEmbedding } from "@/lib/ai/nebius";
 
 export const EMBEDDING_DIMENSIONS = 1536;
 export const DEFAULT_SIMILARITY_THRESHOLD = 0.92;
@@ -11,7 +11,7 @@ export const DEFAULT_SIMILARITY_THRESHOLD = 0.92;
 /**
  * Generates a normalized 1536-dimensional vector embedding for text.
  * Priority order:
- * 1. Cloudflare Workers AI (@cf/baai/bge-m3) if CLOUDFLARE_API_TOKEN is set
+ * 1. Nebius Token Factory (Qwen/Qwen3-Embedding-8B) if NEBIUS_API_KEY is set
  * 2. OpenAI (text-embedding-3-small) if OPENAI_API_KEY is set
  * 3. Local deterministic feature projection (zero-dependency fallback)
  */
@@ -26,19 +26,13 @@ export async function generateEmbedding(
     };
   }
 
-  // 1. Cloudflare Workers AI (@cf/baai/bge-m3)
-  if (process.env.CLOUDFLARE_API_TOKEN && process.env.CLOUDFLARE_ACCOUNT_ID) {
-    const cf = await runCloudflareEmbedding(clean);
-    if (cf && cf.embedding.length > 0) {
-      // Pad 1024-dimension vector to 1536 dimensions
-      // Mathematically, padding with zeros preserves cosine similarity and ranking identically.
-      const padded = new Array(EMBEDDING_DIMENSIONS).fill(0);
-      for (let i = 0; i < cf.embedding.length; i++) {
-        padded[i] = cf.embedding[i];
-      }
+  // 1. Nebius Token Factory (Qwen/Qwen3-Embedding-8B)
+  if (process.env.NEBIUS_API_KEY) {
+    const nebius = await runNebiusEmbedding(clean, { dimensions: EMBEDDING_DIMENSIONS });
+    if (nebius && nebius.embedding.length === EMBEDDING_DIMENSIONS) {
       return {
-        embedding: padded,
-        model: `cloudflare:${cf.model}`,
+        embedding: nebius.embedding,
+        model: `nebius:${nebius.model}`,
       };
     }
   }

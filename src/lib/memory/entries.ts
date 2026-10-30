@@ -14,6 +14,7 @@ import {
 import { sanitizeKey, sanitizeValue } from "./sanitize";
 import { logAuditEvent } from "./audit";
 import { generateEmbedding, findNearDuplicate } from "./embeddings";
+import { detectProcedure } from "@/lib/ai/nebius";
 
 export interface CreateEntryParams {
   podId: string;
@@ -242,8 +243,19 @@ export async function createEntry(
   const initialStatus =
     params.status ??
     (!params.createdByUser && ns[0].requireApproval ? "draft" : "live");
-  const kind = params.kind ?? "fact";
-  const procedureWhen = params.procedureWhen ?? null;
+  let kind = params.kind ?? "fact";
+  let procedureWhen = params.procedureWhen ?? null;
+
+  // Everyday fast call with Nemotron Nano: If kind wasn't explicitly set, detect if text describes a conditional procedure
+  if (kind === "fact" && !procedureWhen && process.env.NEBIUS_API_KEY) {
+    if (/\b(when|always|never|before|after|if|should|must|rule|workflow|steps)\b/i.test(valueText)) {
+      const proc = await detectProcedure(valueText);
+      if (proc.isProcedure && proc.procedureWhen) {
+        kind = "procedure";
+        procedureWhen = proc.procedureWhen;
+      }
+    }
+  }
 
   const [entry] = await db
     .insert(memoryEntries)

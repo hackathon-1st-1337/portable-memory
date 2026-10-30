@@ -11,7 +11,7 @@ import {
   type DreamSuggestion,
 } from "@/db/schema";
 import { logAuditEvent } from "./audit";
-import { runCloudflareChat } from "@/lib/ai/cloudflare";
+import { runReasoning } from "@/lib/ai/nebius";
 import { createOrGetEntity, createRelation } from "./graph";
 import { updateEntry, deleteEntry } from "./entries";
 
@@ -106,7 +106,7 @@ For "graph", the proposal must contain:
       const userPrompt = `Here are the active memory entries:\n\n${entriesSummary}\n\nReturn JSON only.`;
 
       let llmText = "";
-      const chatRes = await runCloudflareChat([
+      const chatRes = await runReasoning([
         { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt },
       ]);
