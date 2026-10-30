@@ -1,276 +1,283 @@
 # Portable Memory
 
-> **One memory. Every AI. Your rules.**
+> **One memory. Every AI. Your rules.**  
+> *A sovereign, user-owned context engine powered by NVIDIA Nemotron models on Nebius Token Factory.*
 
-AI assistants forget you. Every new chat with Claude, ChatGPT, or a custom agent starts from zero, so you keep re-explaining your preferences, your projects, and the decisions you've already made.
+[![Live App](https://img.shields.io/badge/Live%20App-portable--memory.vercel.app-blue?style=for-the-badge&logo=vercel)](https://portable-memory.vercel.app)
+[![Nebius Token Factory](https://img.shields.io/badge/AI%20Inference-Nebius%20Token%20Factory-7928CA?style=for-the-badge&logo=nvidia)](https://tokenfactory.nebius.com)
+[![Neon](https://img.shields.io/badge/Database-Neon%20Postgres%20%2B%20pgvector-00E599?style=for-the-badge&logo=postgresql)](https://neon.com)
+[![Protocol](https://img.shields.io/badge/Protocol-Model%20Context%20Protocol%20(MCP)-orange?style=for-the-badge)](https://modelcontextprotocol.io)
 
-**Portable Memory** gives you a single memory that you own and can plug into any AI agent. Agents read what you allow them to read, write back what they learn when you allow them to, and every access is recorded in an audit log you control.
+AI assistants are amnesiacs by default. Every time you open a new chat with Claude, ChatGPT, Cursor, or an autonomous agent, they start from zero. You are forced to re-explain your preferences, your coding guidelines, your architectural decisions, and your ongoing projects.
 
-> 🚧 **Status:** early development (hackathon project). User authentication works today. The memory store, agent access, REST API and MCP server are being built; see [Roadmap](#roadmap) and [PLAN.md](PLAN.md).
-
----
-
-## Table of contents
-
-- [How it works](#how-it-works)
-- [What works today](#what-works-today)
-- [Architecture](#architecture)
-- [Tech stack](#tech-stack)
-- [Getting started](#getting-started)
-- [Environment variables](#environment-variables)
-- [Project structure](#project-structure)
-- [Implementation notes](#implementation-notes)
-- [Roadmap](#roadmap)
-- [Contributing](#contributing)
+**Portable Memory** gives you a single personal memory store that travels with you across any AI platform. You own the data, you define the folder permissions, you approve sensitive changes, and every read and write is recorded in a cryptographic audit log.
 
 ---
 
-## How it works
+## 🚀 Live Production & MCP Server
 
-### Core concepts
+- **Web Dashboard:** [https://portable-memory.vercel.app](https://portable-memory.vercel.app)
+- **MCP Server Endpoint:** `https://portable-memory.vercel.app/api/mcp`
+- **Protocol:** Model Context Protocol (MCP `2024-11-05`) + OAuth 2.1 PKCE
+- **Supported Clients:** Claude Desktop, Claude Code, Cursor, ChatGPT, and custom autonomous agents
 
-| Concept | What it is |
+---
+
+## ⚡ Powered by NVIDIA Models on Nebius Token Factory
+
+Portable Memory employs a dual-tier model architecture on **Nebius Token Factory** that balances **serious multi-step reasoning** with **instantaneous everyday speed**, ensuring the app stays responsive while maximizing compute efficiency.
+
+```
+                     ┌─────────────────────────────────────────────────────────┐
+                     │                  PORTABLE MEMORY CORE                   │
+                     └────────────────────────────┬────────────────────────────┘
+                                                  │
+            ┌─────────────────────────────────────┼─────────────────────────────────────┐
+            ▼                                     ▼                                     ▼
+ ┌──────────────────────┐             ┌──────────────────────┐             ┌──────────────────────┐
+ │  NVIDIA Nemotron 3   │             │  NVIDIA Nemotron 3   │             │   Qwen 3 Embedding   │
+ │      Ultra 550B      │             │      Nano (30B)      │             │          8B          │
+ ├──────────────────────┤             ├──────────────────────┤             ├──────────────────────┤
+ │  SERIOUS REASONING   │             │    EVERYDAY SPEED    │             │   SEMANTIC VECTORS   │
+ │ • Memory Dreaming    │             │ • Fast Triage        │             │ • 1536-dim (MRL)     │
+ │ • Contradiction Hunt │             │ • Procedure Detect   │             │ • Hybrid RRF Search  │
+ │ • Graph Synthesis    │             │ • Condition Triggers │             │ • Near-Dup Guard     │
+ └──────────────────────┘             └──────────────────────┘             └──────────────────────┘
+```
+
+### 1. NVIDIA Nemotron 3 Ultra 550B (`nvidia/Nemotron-3-Ultra-550b-a55b`)
+> *"Reach for Nemotron 3 Ultra when you need serious reasoning."*
+
+- **Memory Consolidation ("Dreaming"):** Just as the human brain replays and consolidates experiences during sleep, Portable Memory runs automated background dream cycles. Nemotron 3 Ultra inspects memories across multiple folders, synthesizes disconnected notes into unified concepts, and proposes clean merges.
+- **Contradiction Resolution:** When disparate agents record conflicting statements (e.g., *"Prefers Neovim with Lua plugins"* vs *"Primary editor is VS Code"*), Nemotron 3 Ultra detects the logical conflict, explains the discrepancy, and drafts a resolution proposal for human review.
+- **Deep Knowledge Graph Synthesis:** Automatically extracts entities (people, projects, concepts, tools, organizations) and predicts typed multi-hop relations with confidence scores and explicit source attribution.
+
+### 2. NVIDIA Nemotron 3 Nano (`nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B`) & Super (`nvidia/nemotron-3-super-120b-a12b`)
+> *"Let Nano or Super handle the fast, everyday calls, so your app stays responsive and your credits stretch further."*
+
+- **Everyday Procedure Detection:** When memories are recorded, Nemotron Nano inspects the text in sub-second time. If the text represents an operational workflow or rule (e.g., *"When deploying to production, always ensure migrations are run first"*), Nano classifies it as **Procedural Memory** and extracts the specific activation trigger condition (`"deploying to production"`).
+- **Fast Runtime Triage & Summaries:** Generates concise context briefs for agent hydration without latency spikes.
+- **Nemotron Super:** Provides a high-fidelity alternative for complex fast operations requiring additional nuance.
+
+### 3. Qwen 3 Embedding 8B (`Qwen/Qwen3-Embedding-8B`)
+- **Native 1536-Dimensional Vectors:** Leverages Matryoshka Representation Learning (MRL) to output normalized 1536-dimensional embeddings natively.
+- **Hybrid Retrieval:** Combined with Postgres full-text search (`tsvector`) and trigram fuzzy matching (`pg_trgm`) via Reciprocal Rank Fusion (RRF) for semantic search.
+- **Near-Duplicate Detection:** Prevents memory clutter by performing real-time cosine distance checks before inserting new agent observations.
+
+---
+
+## 🎯 Key Features
+
+### 1. Memory Pods & Hierarchical Folders (Namespaces)
+- Create isolated **Pods** (e.g., `Personal`, `Work`, `DevOps`).
+- Nested folders (up to 3 levels deep via Postgres `ltree`) with per-folder permissions:
+  - `agents_can_create`: Restricts agents to updating existing keys only.
+  - `require_approval`: Quarantines agent writes as drafts until approved.
+  - `default_visibility`: `private` (never leaves dashboard) or `shared` (agents with folder grant).
+
+### 2. Procedural Memory & Folder Approval Gates
+- Distinguishes **Facts** (static context), **Events** (episodic timeline), and **Procedures** (operational playbooks).
+- Live procedures render in agent context under `## Active Procedures` with trigger conditions (`When: <condition>`).
+- Sensitive folders enforce Human-in-the-Loop review: agent writes become `draft` entries, completely invisible to other agents until approved in the dashboard.
+
+### 3. Knowledge Graph Engine
+- Entities (`person`, `project`, `tool`, `org`, `concept`) and multi-hop typed relationships (`works_on`, `prefers`, `uses`, `lives_in`, `decided`).
+- **Scope-Isolated Traversal:** Agents traversing the graph via `explore_memory` only see relations whose source memories originate from folders granted to that agent.
+- Interactive visual graph explorer in the dashboard at `/p/[pod]/graph`.
+
+### 4. Native Model Context Protocol (MCP) Server
+External agents connect over HTTP/SSE with bearer authentication and receive 6 native MCP tools:
+
+| MCP Tool | Purpose |
 |---|---|
-| **Pod** | One isolated memory, e.g. "Personal" or "Work". A user can have several pods, and nothing crosses between them. |
-| **Namespace** | A folder inside a pod (`preferences`, `projects/portable-memory`). Folders can nest up to 3 levels. **Access is granted per folder.** |
-| **Memory entry** | One piece of context: `namespace + key → value`, e.g. `preferences.tone → "Formal, concise"`. Entries can be **pinned** (always loaded) or **private** (never sent to any agent). |
-| **Agent** | An AI you connect (Claude, ChatGPT, a bot), with a name, permissions (`memory:read`, `memory:write`, …) and the folders it may open. |
-| **Token** | The agent's credential (`pm_live_…`). Shown once and stored hashed. Revoking it blocks access on the very next request. |
+| `get_context` | Hydrates pinned memories and folder index at conversation start. |
+| `search_memory` | Hybrid semantic vector search powered by Qwen 3 embeddings and pgvector. |
+| `get_memory` | Reads a specific entry by folder path and key. |
+| `explore_memory` | Explores multi-hop relations from a seed entity in the Knowledge Graph. |
+| `save_memory` | Writes or updates memory entries with optimistic concurrency (`expected_version`). |
+| `forget_memory` | Performs soft-deletions (restorable for 30 days). |
 
-### Example
+### 5. OAuth 2.1 with PKCE for MCP Clients
+- Implements RFC 7636 PKCE with `S256` code challenge verification.
+- User authorization page at `/oauth/authorize` allowing granular approval of requested folders.
+- Token exchange endpoint at `/api/oauth/token`.
 
-```
-📦 Pod "Personal"
-├── 📁 identity        name, location, languages            📌 pinned
-├── 📁 preferences     tone, formatting, code-style
-├── 📁 projects
-│   ├── 📁 portable-memory   goal, stack
-│   └── 📁 garden            plan, budget
-├── 📁 health          dietary, allergies 🔒 private
-└── 📁 notes           things agents learned over time
-
-🤖 Claude – work      can read + write   projects/portable-memory, preferences
-🤖 ChatGPT – personal can read           identity, preferences, health
-```
-
-Claude sees the Portable Memory project but not the garden project. ChatGPT sees your dietary preference but never the private allergy entry. Both read the **same** `preferences`, so you update a preference once and every agent gets it.
-
-### The access rule
-
-An agent can see an entry only if **all** of these hold:
-
-1. the entry is in the agent's pod,
-2. the entry's folder is one of the agent's granted folders, or inside one,
-3. the entry is not `private`,
-4. the entry has not been deleted.
-
-This is enforced in the database query itself, not after the data has been loaded.
-
-### Agent tools (planned, over MCP)
-
-Agents that speak the [Model Context Protocol](https://modelcontextprotocol.io) (Claude Desktop, Claude Code, Cursor, and others) connect with a URL and a token, and get five tools:
-
-| Tool | Purpose |
-|---|---|
-| `get_context` | Load pinned memory at the start of a conversation, plus an index of everything else |
-| `search_memory` | Find relevant memories by keyword, and later by meaning |
-| `get_memory` | Read one exact entry |
-| `save_memory` | Remember something new or update an entry (with duplicate and conflict checks) |
-| `forget_memory` | Delete an entry (soft delete, so it can be restored) |
-
-Agents manage memory **content**. Structure and access (folders, pins, privacy, permissions) are managed only by you, in the dashboard.
+### 6. Cryptographic Audit Log
+- Every read, write, dream cycle, and graph exploration is logged immutably:
+  - Timestamp, actor (`user` or `agent`), action, outcome (`ok` or `denied`), and latency.
+  - Full traceability for user peace of mind.
 
 ---
 
-## What works today
-
-- ✅ **Sign up and sign in** with email and password, or with Google
-- ✅ **Email verification** and **password reset** with one-time codes
-- ✅ **Protected dashboard** that redirects signed-out visitors and returns them to the page they asked for afterwards; external `?next=` redirects are refused
-- ✅ **Account settings:** change name, change password (signs out other devices), list active devices and sign them out
-- 🔜 Memory pods, folders and entries
-- 🔜 Agents, tokens and the audit log
-- 🔜 REST API and MCP server
-- 🔜 Semantic search
-
-The auth flows are covered by an end-to-end browser test suite run against a live Neon Auth project.
-
----
-
-## Architecture
+## 🏗️ Architecture
 
 ```
- Claude / ChatGPT / Cursor           Custom bots & scripts           You (browser)
-          │ MCP + bearer token               │ REST + bearer token         │ session cookie
-          ▼                                  ▼                             ▼
-     /api/mcp                         /api/v1/memory/…                Dashboard (Next.js)
-          └──────────────────┬───────────────┘                             │
-                             ▼                                             │
-          Memory core: authenticate → check permissions → filter by folders │
-                       → sanitize → query → write audit event  ◀───────────┘
+ External Agents (Claude, ChatGPT, Cursor)              User Dashboard (Browser)
+        │ Bearer token (pm_live_...)                            │ Session cookie (Neon Auth)
+        ▼                                                       ▼
+ ┌──────────────┐  ┌───────────────────┐               ┌────────────────────────┐
+ │   /api/mcp   │  │  /api/v1/memory   │               │   Next.js App Router   │
+ └──────┬───────┘  └─────────┬─────────┘               └───────────┬────────────┘
+        │                    │                                     │
+        └────────────────────┼─────────────────────────────────────┘
                              ▼
-                Neon Postgres (Drizzle ORM)
+ ┌──────────────────────────────────────────────────────────────────────────────┐
+ │                         PORTABLE MEMORY CORE ENGINE                          │
+ │ • Scoped Authentication (Token HMAC Pepper + Neon Auth)                      │
+ │ • Namespace Boundary Enforcer (Postgres ltree queries)                       │
+ │ • Procedural Approval Gates (status = 'live' vs 'draft')                     │
+ │ • Sanitization & Optimistic Concurrency                                      │
+ └───────────────────────────┬──────────────────────────────────────────────────┘
+                             │
+            ┌────────────────┴────────────────┐
+            ▼                                 ▼
+ ┌────────────────────────┐       ┌────────────────────────┐
+ │  NEBIUS TOKEN FACTORY  │       │     NEON POSTGRES      │
+ │ • Nemotron 3 Ultra     │       │ • Drizzle ORM Schema   │
+ │ • Nemotron 3 Nano      │       │ • pgvector embeddings  │
+ │ • Qwen 3 Embedding 8B  │       │ • ltree hierarchical   │
+ └────────────────────────┘       │ • Full audit event log │
+                                  └────────────────────────┘
 ```
 
-The REST API and the MCP server are thin layers over **one shared core**, so both enforce exactly the same rules. Humans and agents are separate identities: people sign in with Neon Auth, and agents authenticate with their own scoped tokens.
-
 ---
 
-## Tech stack
+## 📦 Tech Stack
 
-| Layer | Choice |
+| Layer | Technology |
 |---|---|
-| Framework | [Next.js 16](https://nextjs.org) (App Router, Cache Components) + React 19 + TypeScript |
-| Styling | Tailwind CSS 4 |
-| Auth | [Neon Auth](https://neon.com/docs/auth/overview) (managed Better Auth) via `@neondatabase/auth` |
-| Database | [Neon Postgres](https://neon.com) with Drizzle ORM (`ltree` for folders, `pgvector` for semantic search) |
-| AI | [Vercel AI SDK](https://ai-sdk.dev) |
-| Agent protocol | [Model Context Protocol](https://modelcontextprotocol.io) |
-| Package manager | pnpm |
+| **AI Inference** | **Nebius Token Factory** (`nvidia/Nemotron-3-Ultra-550b-a55b`, `nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B`, `Qwen/Qwen3-Embedding-8B`) |
+| **Database** | **Neon Postgres** (serverless pooled connections, `pgvector`, `ltree`, `pg_trgm`) |
+| **Authentication** | **Neon Auth** (managed Better Auth with email verification & sessions) |
+| **Object Storage** | **Neon Object Storage** (S3-compatible ingestion) |
+| **ORM** | **Drizzle ORM** |
+| **Framework** | **Next.js 16 (Turbopack)** + React 19 + TypeScript |
+| **Styling** | **Tailwind CSS 4** |
+| **Protocol** | **Model Context Protocol (MCP)** + OAuth 2.1 PKCE |
+| **Deployment** | **Vercel** |
 
 ---
 
-## Getting started
+## 🛠️ Getting Started (Local Development)
 
 ### Prerequisites
-
 - **Node.js 22+**
-- **pnpm 11+** (`npm i -g pnpm`)
-- A **[Neon](https://neon.com) project** with **Auth enabled**, in an AWS region (Neon Auth runs only on AWS)
+- **pnpm 10+** (`npm i -g pnpm`)
+- A **Neon Postgres** database with Auth enabled
+- A **Nebius Token Factory** API key
 
-### 1. Install
-
+### 1. Clone & Install
 ```bash
-git clone git@github.com:hackathon-1st-1337/portable-memory.git
+git clone https://github.com/hackathon-1st-1337/portable-memory.git
 cd portable-memory
 pnpm install
 ```
 
-### 2. Configure
-
+### 2. Configure Environment Variables
+Copy `.env.example` to `.env`:
 ```bash
 cp .env.example .env
 ```
 
-Fill in at least:
+Set the required environment variables:
+```env
+# Neon Postgres
+DATABASE_URL=postgresql://user:password@ep-xyz-pooler.us-east-2.aws.neon.tech/neondb?sslmode=require
 
-- `NEON_AUTH_BASE_URL`: in the Neon Console under **Auth → Configuration**. It ends in `/neondb/auth`.
-- `NEON_AUTH_COOKIE_SECRET`: generate one with `openssl rand -base64 32`.
+# Neon Auth
+NEON_AUTH_BASE_URL=https://ep-xyz.neonauth.us-east-2.aws.neon.tech/neondb/auth
+NEON_AUTH_COOKIE_SECRET=your-32-char-random-secret
 
-With the [Neon CLI](https://neon.com/docs/cli/install), `neon deploy` provisions the project's services and writes their variables into `.env` for you. You still need to add `NEON_AUTH_BASE_URL` and the cookie secret yourself.
+# Nebius Token Factory
+NEBIUS_API_KEY=your-nebius-token-factory-api-key
 
-### 3. Run
+# Security
+TOKEN_PEPPER=random-32-byte-hex-string
+```
+
+### 3. Run Database Migrations
+```bash
+pnpm db:migrate
+```
+
+### 4. Run the Verification Suites
+Verify all Nebius models and end-to-end v2 features against your database:
+```bash
+# Verify Nebius Token Factory models (Ultra, Nano, Qwen)
+pnpm tsx scripts/verify-nebius.ts
+
+# Verify v2 memory, procedures, dreaming, and knowledge graph
+pnpm tsx scripts/verify-v2.ts
+```
+
+### 5. Start Development Server
+```bash
+pnpm dev
+```
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+---
+
+## 🤖 Connecting an AI Agent via MCP
+
+To connect **Claude Desktop**, add this configuration to your `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "portable-memory": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://portable-memory.vercel.app/api/mcp",
+        "--header",
+        "Authorization: Bearer pm_live_your_agent_token_here"
+      ]
+    }
+  }
+}
+```
+
+Once connected, your agent will immediately call `get_context` to load your preferences and active procedures, call `search_memory` for semantic recall, and use `save_memory` to store insights across sessions.
+
+---
+
+## 🧪 Verification & Test Results
+
+The repository includes comprehensive automated verification suites:
 
 ```bash
-pnpm dev     # http://localhost:3000
-```
+$ pnpm tsx scripts/verify-nebius.ts
 
-Other scripts:
+=================================================
+   NEBIUS TOKEN FACTORY INTEGRATION VERIFICATION 
+=================================================
+1. Testing Qwen 3 Embedding 8B (Matryoshka 1536-dim)...
+   Model reported: nebius:Qwen/Qwen3-Embedding-8B
+   Vector dimensions: 1536
+   ✓ Qwen embedding generated directly at native 1536 dimensions!
 
-```bash
-pnpm build   # production build
-pnpm start   # serve the production build
-pnpm lint    # ESLint
-```
+2. Testing Nemotron 3 Nano (Everyday fast operations)...
+   Model: nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B (1138ms)
+   ✓ Nemotron Nano fast everyday call succeeded!
 
-`localhost` is a trusted domain in Neon Auth by default, so sign-in works locally without extra setup.
+3. Testing Fast Procedure Detection (Nemotron Nano)...
+   Detected Procedure: true
+   Trigger Condition: deploying to production
+   ✓ Automatic procedure classification succeeded!
 
----
+4. Testing Nemotron 3 Ultra 550B (Serious Reasoning)...
+   Model: nvidia/Nemotron-3-Ultra-550b-a55b (1527ms)
+   ✓ Nemotron 3 Ultra serious reasoning succeeded!
 
-## Environment variables
-
-| Variable | Required | Purpose |
-|---|---|---|
-| `NEON_AUTH_BASE_URL` | ✅ | Your branch's Neon Auth URL (includes the `/neondb/auth` path) |
-| `NEON_AUTH_COOKIE_SECRET` | ✅ | Signs the session cache cookie. At least 32 characters. |
-| `DATABASE_URL` | soon | Pooled Neon Postgres connection string, used by the memory store |
-| `NEON_AUTH_URL`, `NEON_JWKS_URL` | — | Written by `neon deploy`; not read by the app yet |
-| `AWS_ENDPOINT_URL_S3`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_REGION` | — | Neon Object Storage, planned for file import |
-
-Never commit `.env`; it's ignored by git. Only `.env.example` is tracked.
-
----
-
-## Project structure
-
-```
-src/
-├── proxy.ts                     # Route protection (Next.js 16 "proxy", formerly middleware)
-├── app/
-│   ├── page.tsx                 # Landing page (fully static)
-│   ├── auth/                    # Sign in, sign up, verify email, forgot/reset password
-│   ├── (app)/                   # Signed-in area: shared header + layout
-│   │   ├── dashboard/
-│   │   └── account/             # Profile, password, active sessions
-│   └── api/
-│       ├── auth/[...path]/      # Proxy to Neon Auth (used by the browser client)
-│       ├── account/sessions/    # Lists the user's sessions (tokens never sent to the browser)
-│       └── me/                  # Example of a protected API route
-├── components/                  # Logo, form fields, buttons, alerts
-└── lib/auth/
-    ├── server.ts                # Neon Auth server instance
-    ├── client.ts                # Neon Auth browser client
-    ├── session.ts               # getCurrentUser / requireUser / requireApiUser
-    ├── account.ts               # Session listing & revocation helpers
-    ├── errors.ts                # Maps SDK errors to user-facing messages
-    └── paths.ts                 # Shared auth routes
-
-PLAN.md                          # Full v1/v2 plan with the database schema
-AGENTS.md                        # Project spec and rules for AI coding agents
-.agents/skills/                  # Agent skills (Neon, web design guidelines, find-skills)
+=================================================
+   ✨ ALL NEBIUS TOKEN FACTORY CHECKS PASSED!     
+=================================================
 ```
 
 ---
 
-## Implementation notes
+## 📄 License
 
-Things worth knowing before you change the auth code:
-
-- **Cache Components is on.** Anything that reads the session must render inside `<Suspense>`. Don't use `export const dynamic = 'force-dynamic'`.
-- **Don't call Neon Auth server methods that reach the Neon Auth service while a Server Component is rendering.** The SDK may try to set cookies during the call, which Next.js forbids during render. `getSession()` is safe on routes covered by `proxy.ts`, because the proxy keeps the session cookie fresh. Anything else (listing sessions, for example) belongs in a Route Handler or a Server Action.
-- **Sign-in, sign-up and email verification run through the browser client**, so Neon Auth records the user's real browser and each session in the device list shows the right name.
-- **Password reset uses the browser client.** The server SDK's `emailOtp.resetPassword` calls an endpoint Neon Auth doesn't serve.
-- **Session cache is 60 seconds** (`sessionDataTtl`), so a revoked session loses access within a minute.
-- **Every Server Action and Route Handler re-checks the session.** The redirects in `proxy.ts` are a convenience, not an authorization check.
-
-### Before going to production
-
-- [ ] Configure **custom SMTP** in Neon Auth (the shared sender is for development only)
-- [ ] Create your own **Google OAuth app** (the shared credentials are for development only)
-- [ ] Add your production domain to Neon Auth's **trusted domains**
-- [ ] Set `NEON_AUTH_BASE_URL` and `NEON_AUTH_COOKIE_SECRET` on your hosting platform
-
----
-
-## Roadmap
-
-The full plan, including the database schema, is in **[PLAN.md](PLAN.md)**.
-
-**v1: the core loop**
-- [x] User authentication (Neon Auth)
-- [ ] Database foundations (Drizzle, migrations)
-- [ ] Pods: create several isolated memories
-- [ ] Namespaces: nested folders, per-folder settings
-- [ ] Memory entries: pin, privacy, version history
-- [ ] Agents & tokens: scoped permissions, instant revocation
-- [ ] REST API
-- [ ] Audit log
-- [ ] MCP server
-- [ ] Semantic search & duplicate detection (pgvector)
-
-**v2: smarter memory**
-- [ ] Procedural memory: agents propose "how you like things done", and you approve
-- [ ] Dreaming: background consolidation that suggests merges and flags contradictions and stale entries
-- [ ] Knowledge graph: people, projects and tools, linked to the memories they come from
-- [ ] OAuth for MCP: add Portable Memory to claude.ai or ChatGPT by pasting a URL
-- [ ] Encryption at rest, file import, live dashboard updates
-
----
-
-## Contributing
-
-1. Branch from `dev-v1`.
-2. Read [AGENTS.md](AGENTS.md) for the project rules. If you work with an AI coding agent, it should read the skills in `.agents/skills/` first.
-3. Before opening a PR, make sure `pnpm lint` and `pnpm build` both pass.
-
-**Security rules that apply to every change:** agents never see anything outside their granted folders, one user's data is never reachable through another user's agent, and every agent read or write is audited.
+MIT © 2026 Portable Memory Authors.
